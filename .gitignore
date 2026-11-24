@@ -1,0 +1,7 @@
+# Design export (23 MB, not used by the site)
+Ememobong & Kingsley Wedding.html
+
+.DS_Store
+.vscode/
+.vercel/
+node_modules/
