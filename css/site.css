@@ -206,8 +206,11 @@ em.amp, .burgundy { font-style: italic; color: var(--ek-burgundy); }
   filter: sepia(0.05) saturate(0.95) contrast(1.05); transform: translateY(-2px);
 }
 .gallery-item:nth-child(3n + 2) { margin-top: var(--stagger); }
+/* A lone photo on the last desktop row sits in the middle column. */
+.gallery-item:last-child:nth-child(3n + 1) { grid-column: 2; }
 @media (max-width: 899px) {
   .gallery-item:nth-child(3n + 2) { margin-top: 0; }
+  .gallery-item:last-child:nth-child(3n + 1) { grid-column: auto; }
   .gallery-item:nth-child(even) { margin-top: var(--stagger); }
 }
 
