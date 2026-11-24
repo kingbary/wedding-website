@@ -27,6 +27,77 @@
   updateCountdown();
   setInterval(updateCountdown, 60000);
 
+  // — Gallery lightbox —
+  // Each gallery link points at the full image, so without JS it still opens.
+  var gallery = document.querySelector("[data-gallery]");
+  var lightbox = document.querySelector("[data-lightbox]");
+  if (gallery && lightbox && typeof lightbox.showModal === "function") {
+    var items = Array.prototype.slice.call(gallery.querySelectorAll("a"));
+    var lbImg = lightbox.querySelector("[data-lightbox-img]");
+    var lbCount = lightbox.querySelector("[data-lightbox-count]");
+    var lbFigure = lightbox.querySelector(".lightbox-figure");
+    var current = 0;
+
+    var show = function (i) {
+      current = (i + items.length) % items.length;
+      var link = items[current];
+      var thumb = link.querySelector("img");
+      lbImg.src = link.getAttribute("href");
+      lbImg.alt = thumb ? thumb.alt : "";
+      lbCount.textContent = current + 1 + " / " + items.length;
+      // Warm the next photo so arrowing through feels instant.
+      var next = items[(current + 1) % items.length];
+      if (next) new Image().src = next.getAttribute("href");
+    };
+
+    var open = function (i) {
+      show(i);
+      lightbox.showModal();
+      document.documentElement.classList.add("lightbox-open");
+    };
+
+    items.forEach(function (link, i) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        open(i);
+      });
+    });
+
+    lightbox.addEventListener("close", function () {
+      document.documentElement.classList.remove("lightbox-open");
+      if (items[current]) items[current].focus();
+    });
+
+    lightbox.querySelector("[data-lightbox-prev]").addEventListener("click", function () { show(current - 1); });
+    lightbox.querySelector("[data-lightbox-next]").addEventListener("click", function () { show(current + 1); });
+    lightbox.querySelector("[data-lightbox-close]").addEventListener("click", function () { lightbox.close(); });
+
+    lightbox.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { e.preventDefault(); show(current - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); show(current + 1); }
+    });
+
+    // Clicking the dark area around the photo closes the viewer.
+    var swiped = false;
+    lbFigure.addEventListener("click", function (e) {
+      if (swiped) { swiped = false; return; }
+      if (e.target === lbFigure) lightbox.close();
+    });
+
+    // Swipe left/right on phones.
+    var startX = null;
+    lbFigure.addEventListener("pointerdown", function (e) { startX = e.clientX; swiped = false; });
+    lbFigure.addEventListener("pointerup", function (e) {
+      if (startX === null) return;
+      var dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 50) {
+        swiped = true;
+        show(current + (dx < 0 ? 1 : -1));
+      }
+    });
+  }
+
   // — Copy account number —
   var copyBtn = document.querySelector("[data-copy]");
   var copyLabel = document.querySelector("[data-copy-label]");

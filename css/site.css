@@ -181,6 +181,73 @@ em.amp, .burgundy { font-style: italic; color: var(--ek-burgundy); }
 .footer-mark { font-family: var(--font-heading); font-style: italic; font-size: 28px; color: var(--ek-burgundy); }
 .footer-note { font-size: 13px; color: var(--color-neutral-700); }
 
+/* — gallery — */
+.gallery { margin: 0 var(--pad); padding: var(--pad-big) 0; border-top: 1px solid var(--color-divider); }
+.gallery-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 8px 24px; margin-bottom: var(--gap-sm);
+}
+.gallery-head .lead { flex: 1 1 18em; text-align: right; }
+.gallery-grid {
+  display: grid; gap: var(--gap-sm);
+  /* 3 across on desktop (middle column dropped), 2 across on smaller screens
+     (right column dropped). Works best with a multiple of 6 photos. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 899px) {
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.gallery-item { display: block; cursor: zoom-in; }
+.gallery-item img {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+.gallery-item:hover img, .gallery-item:focus-visible img {
+  filter: sepia(0.05) saturate(0.95) contrast(1.05); transform: translateY(-2px);
+}
+.gallery-item:nth-child(3n + 2) { margin-top: var(--stagger); }
+@media (max-width: 899px) {
+  .gallery-item:nth-child(3n + 2) { margin-top: 0; }
+  .gallery-item:nth-child(even) { margin-top: var(--stagger); }
+}
+
+@media (max-width: 759px) {
+  .gallery-head .lead { text-align: left; }
+}
+
+/* — lightbox — */
+.lightbox {
+  width: 100vw; height: 100dvh; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: oklch(0.18 0.01 85 / 0.96); color: oklch(0.97 0.014 85);
+  overflow: hidden;
+}
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox::backdrop { background: transparent; }
+.lightbox-figure {
+  flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+  padding: 24px var(--pad) 0; touch-action: pan-y;
+}
+.lightbox-figure img {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  border: 6px solid oklch(0.97 0.014 85);
+}
+.lightbox-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px var(--pad) 20px;
+}
+.lightbox-count { font-family: var(--font-heading); font-style: italic; font-size: 20px; }
+.lightbox-actions { display: flex; gap: 8px; }
+.lightbox-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0; cursor: pointer;
+  color: inherit; background: transparent;
+  border: 1px solid oklch(0.97 0.014 85 / 0.35); border-radius: var(--radius-md);
+}
+.lightbox-btn:hover { background: oklch(0.97 0.014 85 / 0.1); }
+.lightbox-btn:focus-visible { outline: 2px solid var(--ek-sage-200); outline-offset: 2px; }
+html.lightbox-open { overflow: hidden; }
+
 /* — online giving (Paystack) — */
 .give { margin-top: 18px; padding-top: 24px; border-top: 1px solid var(--color-divider); }
 .give-title { margin: 0 0 4px; font-size: 28px; font-weight: 400; line-height: 1.1; }
