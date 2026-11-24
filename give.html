@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Give a gift · Ememobong &amp; Kingsley</title>
+    <meta
+      name="description"
+      content="Send a wedding gift to Ememobong and Kingsley online with Paystack or by bank transfer."
+    />
+    <meta property="og:title" content="Give a gift · Ememobong &amp; Kingsley" />
+    <meta property="og:description" content="Bless our new beginning · 27 November 2026" />
+    <link rel="canonical" href="https://ememobong-kingsley.vercel.app/give" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ememobong-kingsley.vercel.app/give" />
+    <meta property="og:image" content="https://ememobong-kingsley.vercel.app/assets/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,500&family=Lora:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="css/classical.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <script src="js/site.js" defer></script>
+  </head>
+  <body class="give-page">
+    <nav class="nav" aria-label="Main">
+      <a href="./" class="gp-mark">E &amp; K</a>
+      <div class="nav-links">
+        <a href="./">Our wedding site</a>
+      </div>
+    </nav>
+
+    <main class="gp">
+      <div class="gp-photo plate">
+        <img
+          src="assets/img-2.webp"
+          alt="Ememobong with her arms around Kingsley, both smiling"
+        />
+      </div>
+
+      <div class="gp-body">
+        <div class="kicker">Ememobong &amp; Kingsley · 27 November 2026</div>
+        <h1 class="gp-title">Bless our <em class="amp">new beginning</em></h1>
+        <p class="gp-intro">
+          Thank you for celebrating with us. If you would like to send a gift,
+          you can give online below or by bank transfer.
+        </p>
+
+        <!-- Same Paystack form as the main page; js/site.js drives both. -->
+        <div class="give" data-give hidden>
+          <div data-give-form>
+            <h2 class="give-title">Give online</h2>
+            <p class="give-sub muted">
+              Card, bank transfer or USSD, secured by Paystack.
+            </p>
+            <form novalidate>
+              <fieldset class="amounts">
+                <legend>Amount</legend>
+                <label class="amount-opt"><input type="radio" name="preset" value="10000" /><span>₦10,000</span></label>
+                <label class="amount-opt"><input type="radio" name="preset" value="20000" /><span>₦20,000</span></label>
+                <label class="amount-opt"><input type="radio" name="preset" value="50000" /><span>₦50,000</span></label>
+                <label class="amount-opt"><input type="radio" name="preset" value="100000" /><span>₦100,000</span></label>
+                <label class="amount-opt"><input type="radio" name="preset" value="other" /><span>Other</span></label>
+              </fieldset>
+              <div class="field" data-give-custom hidden>
+                <label for="give-amount">Amount in naira</label>
+                <div class="naira-input">
+                  <span aria-hidden="true">₦</span>
+                  <input id="give-amount" class="input" name="amount" inputmode="numeric" autocomplete="off" placeholder="e.g. 15,000" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="give-name">Your name</label>
+                <input id="give-name" class="input" name="name" autocomplete="name" />
+              </div>
+              <div class="field">
+                <label for="give-email">Email, for your receipt</label>
+                <input id="give-email" class="input" name="email" type="email" autocomplete="email" />
+              </div>
+              <div class="field">
+                <label for="give-note">A note for the couple (optional)</label>
+                <textarea id="give-note" class="input" name="note" rows="3" maxlength="500"></textarea>
+              </div>
+              <div class="form-error" role="alert" data-give-error hidden></div>
+              <div>
+                <button type="submit" class="btn btn-primary btn-lg" data-give-submit>
+                  Give with Paystack
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div data-give-thanks hidden>
+            <h2 class="give-title">Thank you, <span class="burgundy" data-give-name></span>.</h2>
+            <p class="thanks-body">
+              Your gift of <strong data-give-amount></strong> has been received.
+              Paystack will email your receipt. We are so grateful.
+            </p>
+            <button type="button" class="btn btn-ghost" data-give-again>Give again</button>
+          </div>
+        </div>
+
+        <div class="framed gp-bank">
+          <div class="kicker">Or by bank transfer</div>
+          <div>
+            <div class="label">Bank</div>
+            <div class="value">Access Bank</div>
+          </div>
+          <div>
+            <div class="label">Account name</div>
+            <div class="value">Ememobong</div>
+          </div>
+          <div class="acct">
+            <div class="label">Account number</div>
+            <div class="acct-row">
+              <span class="acct-no" data-acct>0085334345</span>
+              <button type="button" class="btn btn-ghost" data-copy style="gap: 6px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="8" y="8" width="14" height="14" rx="2" />
+                  <path d="M4 16V4h12" />
+                </svg>
+                <span data-copy-label>Copy</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span class="footer-mark">With love, Ememobong &amp; Kingsley</span>
+      <a class="footer-note" href="./">Visit our wedding site</a>
+    </footer>
+  </body>
+</html>

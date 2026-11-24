@@ -194,7 +194,7 @@
 
   try {
     var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    if (saved && saved.name) showThanks(saved.name.split(" ")[0]);
+    if (saved && saved.name && formWrap) showThanks(saved.name.split(" ")[0]);
   } catch (e) {}
 
   if (form) {

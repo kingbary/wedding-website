@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Gift QR card · Ememobong &amp; Kingsley</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,500&family=Lora:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="css/classical.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+      integrity="sha384-mZT2gIty7ZDdOGkxfP6joZcYdMW1Jvj9dRlfpTmaJAKKXTqzygtB22k7FLe+KZC1"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 32px 16px 48px; }
+      .tools { width: min(100%, 520px); display: flex; flex-direction: column; gap: 12px; }
+      .tools-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .tools .hint { margin: 0; font-size: 13px; color: var(--color-neutral-700); }
+      .tools .warn { color: var(--ek-burgundy); }
+      .card {
+        width: min(100%, 420px); padding: 40px 36px 32px; text-align: center;
+        background: var(--color-bg);
+        border: 1px solid var(--ek-sage); outline: 1px solid var(--ek-sage-200); outline-offset: 6px;
+        display: flex; flex-direction: column; align-items: center; gap: 14px;
+      }
+      .card-mark { font-family: var(--font-heading); font-style: italic; font-size: 30px; color: var(--ek-burgundy); line-height: 1; }
+      .card-title { margin: 0; font-family: var(--font-heading); font-weight: 300; font-size: 38px; line-height: 1.05; }
+      .card-sub { margin: 0; font-size: 14px; line-height: 1.5; color: var(--color-neutral-800); max-width: 22em; }
+      .qr { width: 100%; max-width: 260px; aspect-ratio: 1; background: #fff; padding: 12px; border: 6px solid var(--color-surface); }
+      .qr svg { display: block; width: 100%; height: 100%; }
+      .card-url { font-size: 12px; letter-spacing: 0.04em; color: var(--color-neutral-700); word-break: break-all; }
+      .card-foot { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent); }
+      @media print {
+        @page { margin: 12mm; }
+        body { padding: 0; background: #fff; }
+        .tools { display: none; }
+        .card { box-shadow: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tools">
+      <div class="kicker">Gift QR card</div>
+      <div class="field">
+        <label for="qr-url">Link the QR code opens</label>
+        <input id="qr-url" class="input" type="url" spellcheck="false" />
+      </div>
+      <p class="hint" data-hint></p>
+      <div class="tools-row">
+        <button type="button" class="btn btn-primary" data-print>Print card</button>
+        <button type="button" class="btn btn-secondary" data-png>Download QR (PNG)</button>
+        <button type="button" class="btn btn-secondary" data-svg>Download QR (SVG)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-mark">E &amp; K</div>
+      <h1 class="card-title">Scan to send a gift</h1>
+      <p class="card-sub">
+        If you would like to bless our new beginning, scan with your phone camera
+        to give online or see our bank details.
+      </p>
+      <div class="qr" data-qr></div>
+      <div class="card-url" data-url-text></div>
+      <div class="card-foot">Ememobong &amp; Kingsley · 27 · 11 · 2026</div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+        var input = document.getElementById("qr-url");
+        var hint = document.querySelector("[data-hint]");
+        var box = document.querySelector("[data-qr]");
+        var urlText = document.querySelector("[data-url-text]");
+        var INK = "#201f1d";
+        var qr = null;
+
+        // Default to this site's own /give page, so a custom domain added later
+        // is picked up automatically. Locally (or in previews) fall back to the
+        // live Vercel address. ?url=… overrides both.
+        var LIVE_GIVE_URL = "https://ememobong-kingsley.vercel.app/give";
+        var params = new URLSearchParams(location.search);
+        var isLocal = location.protocol === "file:" || /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname);
+        var isPreview = /\.vercel\.app$/.test(location.hostname) && location.hostname !== "ememobong-kingsley.vercel.app";
+        var guess = params.get("url") || (isLocal || isPreview ? LIVE_GIVE_URL : location.origin + "/give");
+        input.value = guess;
+
+        function render() {
+          var url = input.value.trim();
+          box.innerHTML = "";
+          qr = null;
+          if (!/^https?:\/\/\S+$/i.test(url)) {
+            urlText.textContent = "";
+            hint.className = "hint warn";
+            hint.textContent = isLocal && !url
+              ? "You're viewing this on your computer, so enter the live address of the gift page, e.g. https://your-site.vercel.app/give"
+              : "Enter a full link starting with https://";
+            return;
+          }
+          hint.className = "hint";
+          hint.textContent = "Test it: scan the code with your phone before printing.";
+          qr = qrcode(0, "M");
+          qr.addData(url);
+          qr.make();
+          box.innerHTML = svgMarkup();
+          urlText.textContent = url.replace(/^https?:\/\//, "");
+        }
+
+        function svgMarkup() {
+          var n = qr.getModuleCount();
+          var d = "";
+          for (var r = 0; r < n; r++)
+            for (var c = 0; c < n; c++)
+              if (qr.isDark(r, c)) d += "M" + c + " " + r + "h1v1h-1z";
+          return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + n + " " + n +
+            '" shape-rendering="crispEdges" role="img" aria-label="QR code"><path fill="' + INK + '" d="' + d + '"/></svg>';
+        }
+
+        function download(name, href) {
+          var a = document.createElement("a");
+          a.href = href;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+
+        input.addEventListener("input", render);
+        document.querySelector("[data-print]").addEventListener("click", function () { window.print(); });
+
+        document.querySelector("[data-svg]").addEventListener("click", function () {
+          if (!qr) return;
+          // Add a white quiet zone around the code for standalone use.
+          var n = qr.getModuleCount(), q = 4;
+          var svg = svgMarkup()
+            .replace('viewBox="0 0 ' + n + " " + n + '"', 'viewBox="' + -q + " " + -q + " " + (n + 2 * q) + " " + (n + 2 * q) + '"')
+            .replace("<path", '<rect x="' + -q + '" y="' + -q + '" width="' + (n + 2 * q) + '" height="' + (n + 2 * q) + '" fill="#fff"/><path');
+          download("ek-gift-qr.svg", URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" })));
+        });
+
+        document.querySelector("[data-png]").addEventListener("click", function () {
+          if (!qr) return;
+          var n = qr.getModuleCount(), q = 4, scale = Math.ceil(1200 / (n + 2 * q));
+          var size = (n + 2 * q) * scale;
+          var canvas = document.createElement("canvas");
+          canvas.width = canvas.height = size;
+          var ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, size, size);
+          ctx.fillStyle = INK;
+          for (var r = 0; r < n; r++)
+            for (var c = 0; c < n; c++)
+              if (qr.isDark(r, c)) ctx.fillRect((c + q) * scale, (r + q) * scale, scale, scale);
+          download("ek-gift-qr.png", canvas.toDataURL("image/png"));
+        });
+
+        if (typeof qrcode === "undefined") {
+          hint.className = "hint warn";
+          hint.textContent = "The QR code library didn't load. Check your connection and refresh.";
+          return;
+        }
+        render();
+      })();
+    </script>
+  </body>
+</html>
