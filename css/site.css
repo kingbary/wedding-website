@@ -280,6 +280,11 @@ html.lightbox-open { overflow: hidden; }
 }
 .naira-input .input { padding-left: 30px; font-feature-settings: 'tnum'; }
 
+.gift-page-link {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 15px; text-underline-offset: 4px;
+}
+
 /* — standalone gift page (give.html) — */
 .gp-mark {
   margin-right: auto; text-decoration: none;
