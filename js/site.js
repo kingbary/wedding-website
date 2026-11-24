@@ -31,6 +31,46 @@
   // Each gallery link points at the full image, so without JS it still opens.
   var gallery = document.querySelector("[data-gallery]");
   var lightbox = document.querySelector("[data-lightbox]");
+
+  // — Shuffle the gallery on every visit —
+  // Runs before the "See all" and lightbox code so both follow the new order.
+  // Without JS the photos show in the order written in index.html.
+  if (gallery) {
+    var shuffled = Array.prototype.slice.call(gallery.querySelectorAll(".gallery-item"));
+    for (var s = shuffled.length - 1; s > 0; s--) {
+      var r = Math.floor(Math.random() * (s + 1));
+      var tmp = shuffled[s];
+      shuffled[s] = shuffled[r];
+      shuffled[r] = tmp;
+    }
+    shuffled.forEach(function (item) { gallery.appendChild(item); });
+  }
+
+  // — Gallery "See all photos" —
+  // Shows the first GALLERY_PREVIEW photos; the button reveals the rest.
+  // Without JS every photo simply shows.
+  var GALLERY_PREVIEW = 6;
+  var galleryMore = document.querySelector("[data-gallery-more]");
+  if (gallery && galleryMore) {
+    var total = gallery.querySelectorAll(".gallery-item").length;
+    if (total > GALLERY_PREVIEW) {
+      var toggle = galleryMore.querySelector("[data-gallery-toggle]");
+      var toggleLabel = galleryMore.querySelector("[data-gallery-toggle-label]");
+      var setCollapsed = function (collapsed) {
+        gallery.classList.toggle("is-collapsed", collapsed);
+        toggle.setAttribute("aria-expanded", String(!collapsed));
+        toggleLabel.textContent = collapsed ? "See all " + total + " photos" : "Show fewer";
+      };
+      setCollapsed(true);
+      galleryMore.hidden = false;
+      toggle.addEventListener("click", function () {
+        var collapsing = !gallery.classList.contains("is-collapsed");
+        setCollapsed(collapsing);
+        // After collapsing, bring the gallery back into view.
+        if (collapsing) document.getElementById("gallery").scrollIntoView({ block: "start" });
+      });
+    }
+  }
   if (gallery && lightbox && typeof lightbox.showModal === "function") {
     var items = Array.prototype.slice.call(gallery.querySelectorAll("a"));
     var lbImg = lightbox.querySelector("[data-lightbox-img]");

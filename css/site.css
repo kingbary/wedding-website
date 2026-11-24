@@ -222,6 +222,12 @@ em.amp, .burgundy { font-style: italic; color: var(--ek-burgundy); }
   .gallery-head .lead { text-align: left; }
 }
 
+/* Collapsed gallery: only the first 6 photos show until "See all" is pressed. */
+.gallery-grid.is-collapsed .gallery-item:nth-child(n + 7) { display: none; }
+.gallery-more { display: flex; justify-content: center; margin-top: calc(var(--gap) + var(--stagger) / 2); }
+.gallery-more svg { transition: transform 0.2s ease; }
+.gallery-more [aria-expanded="true"] svg { transform: rotate(180deg); }
+
 /* — lightbox — */
 .lightbox {
   width: 100vw; height: 100dvh; max-width: none; max-height: none;
